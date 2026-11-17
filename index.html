@@ -18,7 +18,7 @@
     <div id="start-screen" class="box">
         <h1 id="typing-title"></h1>
         <p id="start-desc" class="fade-item">ตอบคำถามสั้นๆ เพื่อค้นหาบุคลิกภาพที่ซ่อนอยู่ในตัวคุณ</p>
-        <button id="start-btn" class="fade-item" onclick="startQuiz()" style="padding: 10px 20px; cursor: pointer;">เริ่มทำแบบทดสอบ</button>
+        <button id="start-btn" class="fade-item custom-btn btn-auto" onclick="startQuiz()" style="padding: 10px 20px; cursor: pointer;">เริ่มทำแบบทดสอบ</button>
     </div>
 
     <!-- 2. หน้าทำแบบทดสอบ (Quiz Screen) -->
@@ -30,7 +30,7 @@
         <div id="options-container"></div>
 
         <div class="nav-buttons">
-            <button id="prev-btn" onclick="prevQuestion()">ย้อนกลับ</button>
+            <button id="prev-btn" class="prev-custom-btn" onclick="prevQuestion()">ย้อนกลับ</button>
         </div>
     </div>
 
@@ -43,7 +43,11 @@
         <!-- ส่วนแสดงคะแนนดิบ (เผื่อเอาไปทำกราฟ หรือเช็ค Logic ตอนเทส) -->
         <div id="score-breakdown" class="debug-scores"></div>
 
-        <button onclick="restartQuiz()" style="padding: 10px 20px; cursor: pointer;">ทำแบบทดสอบอีกครั้ง</button>
+        <!-- ปุ่มแชร์ที่จะเรียกหน้าต่างพิเศษขึ้นมา -->
+        <div style="display: flex; gap: 8px; justify-content: flex-start; align-items: center; margin-top: 10px;">
+            <button onclick="openShareModal()" class="custom-btn btn-auto">📤 แชร์ผลลัพธ์</button>
+            <button class="prev-custom-btn btn-auto" onclick="restartQuiz()">ทำอีกรอบ</button>
+        </div>
     </div>
 
     <script>
@@ -161,7 +165,7 @@
             // สร้างปุ่มตัวเลือก
             currentQ.options.forEach((option, index) => {
                 const btn = document.createElement('button');
-                btn.className = 'option-btn';
+                btn.className = 'option-btn custom-btn';
                 btn.innerText = option.text;
                 
                 // ไฮไลต์ปุ่มถ้าเคยเลือกข้อนี้ไว้แล้ว (กรณีกดย้อนกลับ)
@@ -242,6 +246,7 @@
         }
 
         function restartQuiz() {
+            
             startQuiz();
         }
 
@@ -275,6 +280,56 @@
         }
 
         window.addEventListener("DOMContentLoaded", typeWriter);
+
+        // ฟังก์ชันเปิดหน้าต่างแชร์พิเศษ
+        function openShareModal() {
+            const modal = document.getElementById('share-modal');
+            const shareImg = document.getElementById('share-card-img');
+            
+            // ดึงรูปสัตว์ตัวที่ผู้ใช้ได้มาแสดงในกรอบแชร์พิเศษ
+            shareImg.src = `${currentTopAnimalKey}.png`;
+            
+            // เอาคลาส hidden ออกเพื่อให้ป๊อปอัพแสดงขึ้นมา
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex'; // บังคับให้แสดงแบบจัดกึ่งกลาง
+        }
+
+        // ฟังก์ชันปิดหน้าต่างแชร์
+        function closeShareModal() {
+            const modal = document.getElementById('share-modal');
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+        }
+
+        // ฟังก์ชันดาวน์โหลดรูปจากการ์ดแชร์พิเศษ
+        function downloadShareCard() {
+            const imageSrc = `${currentTopAnimalKey}.png`;
+            const link = document.createElement('a');
+            link.href = imageSrc;
+            link.download = `my-story-card-${currentTopAnimalKey}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
     </script>
+
+    <!-- 📌 หน้าต่างป๊อปอัพสำหรับการแชร์ (ดีไซน์แยกต่างหากจากหน้าผลลัพธ์) -->
+    <div id="share-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 999;">
+        <div style="background: #ffffff; padding: 25px; border-radius: 16px; text-align: center; width: 85%; max-width: 320px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); font-family: 'Kanit', sans-serif;">
+            <h3 style="margin-top: 0; color: #333; font-size: 1.2rem;">✨ การ์ดผลลัพธ์ของคุณ</h3>
+            
+            <!-- รูปแบบการจัดวางเฉพาะตอนแชร์ (เช่น การ์ดแนวตั้งสไตล์ Story) -->
+            <div style="background: #f9f9f9; border: 2px dashed #ddd; border-radius: 12px; padding: 15px; margin: 15px 0;">
+                <img id="share-card-img" src="" alt="Share Card" style="width: 100%; border-radius: 8px; object-fit: contain;">
+                <p style="font-size: 0.9rem; color: #666; margin: 10px 0 0 0;">แคปหน้าจอหรือกดบันทึกไปแชร์ได้เลย!</p>
+            </div>
+
+            <!-- ปุ่มกดในป๊อปอัพ -->
+            <div style="display: flex; gap: 8px; justify-content: center;">
+                <button onclick="downloadShareCard()" style="padding: 8px 14px; cursor: pointer; background-color: #E1306C; color: white; border: none; border-radius: 6px; font-family: 'Kanit', sans-serif; font-size: 0.9rem;">📥 บันทึกรูป</button>
+                <button onclick="closeShareModal()" style="padding: 8px 14px; cursor: pointer; background-color: #ddd; border: none; border-radius: 6px; font-family: 'Kanit', sans-serif; font-size: 0.9rem;">ปิด</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
