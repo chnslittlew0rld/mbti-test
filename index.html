@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Personality Quiz - Wireframe</title>
+    <style>
+        /* CSS พื้นฐานสำหรับดูโครงสร้างก่อนเอาไปแต่ง UI */
+        body {
+            font-family: sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .hidden {
+            display: none;
+        }
+        .box {
+            border: 1px solid #ccc;
+            padding: 24px;
+            border-radius: 8px;
+        }
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            margin: 10px 0;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .nav-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .debug-scores {
+            background: #f4f4f4;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. หน้าเริ่มต้น (Start Screen) -->
+    <div id="start-screen" class="box">
+        <h1>คุณคือสัตว์ชนิดไหนในกลุ่มเพื่อน?</h1>
+        <p>ตอบคำถามสั้นๆ เพื่อค้นหาบุคลิกภาพที่ซ่อนอยู่ในตัวคุณ</p>
+        <button onclick="startQuiz()" style="padding: 10px 20px; cursor: pointer;">เริ่มทำแบบทดสอบ</button>
+    </div>
+
+    <!-- 2. หน้าทำแบบทดสอบ (Quiz Screen) -->
+    <div id="quiz-screen" class="box hidden">
+        <div id="progress-text">คำถามที่ 1 / 5</div>
+        <h2 id="question-text">ข้อความคำถาม</h2>
+        
+        <div id="options-container"></div>
+
+        <div class="nav-buttons">
+            <button id="prev-btn" onclick="prevQuestion()">ย้อนกลับ</button>
+        </div>
+    </div>
+
+    <!-- 3. หน้าแสดงผลลัพธ์ (Result Screen) -->
+    <div id="result-screen" class="box hidden">
+        <p>บุคลิกภาพของคุณตรงกับ...</p>
+        <h1 id="result-animal" style="font-size: 2.5em; margin: 10px 0;">ชื่อสัตว์</h1>
+        <p id="result-desc">คำอธิบายบุคลิกภาพ</p>
+        
+        <!-- ส่วนแสดงคะแนนดิบ (เผื่อเอาไปทำกราฟ หรือเช็ค Logic ตอนเทส) -->
+        <div id="score-breakdown" class="debug-scores"></div>
+
+        <button onclick="restartQuiz()" style="padding: 10px 20px; cursor: pointer;">ทำแบบทดสอบอีกครั้ง</button>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. ฐานข้อมูลผลลัพธ์สัตว์ทั้ง 6 ชนิด
+        // ==========================================
+        const animalProfiles = {
+            hamster: {
+                name: "แฮมเตอร์",
+                desc: "คุณคือ นักสำรวจตัวจิ๋วที่พลังล้นเหลือ ชอบลองอะไรใหม่ๆ อยู่ตลอดเวลา เกลียดความจำเจ มักมีไอเดียแปลกๆ หรือกิจกรรมสนุกๆ มาชวนเพื่อนทำเสมอ แม้จะตัวเล็กแต่ใจใหญ่และปรับตัวเก่งสุดๆ"
+            },
+            dolphin: {
+                name: "โลมา",
+                desc: "คุณคือ คนสร้างสีสันประจำกลุ่ม เข้ากับคนง่าย คุยเก่ง และมีเซนส์ในการอ่านบรรยากาศเก่งมาก รู้ว่าต้องพูดหรือทำอะไรให้คนรอบข้างยิ้มได้ ชอบความสนุกและไม่ชอบเห็นใครเหงา"
+            },
+            sheep: {
+                name: "แกะ",
+                desc: "คุณคือ พื้นที่ปลอดภัยของคนรอบข้าง จิตใจดี มีความเห็นอกเห็นใจสูง ชอบสังเกตความรู้สึกของเพื่อนๆ มักเป็นคนที่คอยรับฟังและปลอบโยนทุกคนในวันที่เหนื่อยล้าได้อย่างดีเยี่ยม อยู่ด้วยแล้วสบายใจที่สุด"
+            },
+            cat: {
+                name: "แมว",
+                desc: "คุณเป็นคน โลกส่วนตัวสูง มีเสน่ห์ดึงดูด และดื้อเงียบตัวจริง ภายนอกดูนิ่งสงบ พยักหน้ารับฟังทุกอย่าง แต่ในใจมีจุดยืนของตัวเองชัดเจน ใครบังคับหรือสั่งให้ทำอะไรที่ไม่อยากทำไม่มีทางได้ผล คุณรักอิสระ ไม่ชอบตามกระแสใคร และพึ่งพาตัวเองได้ดีเยี่ยม"
+            },
+            red_panda: {
+                name: "แพนด้าแดง",
+                desc: "คุณคือ กัปตันทีมโดยธรรมชาติ มีวิสัยทัศน์ กล้าคิดกล้าตัดสินใจ และพร้อมออกหน้ารับผิดชอบแทนเพื่อนๆ เสมอ เวลาเกิดปัญหาทุกคนมักหันมามองคุณเป็นคนแรก เพราะคุณมีความเด็ดขาด มีเหตุผล และสามารถปลุกพลังใจให้คนในกลุ่มเดินหน้าต่อไปได้"
+            },
+            rabbit: {
+                name: "กระต่าย",
+                desc: "คุณเป็นคน ขี้อาย ไม่ชอบเป็นจุดสนใจ แต่สายตาเฉียบคมสุดๆ เวลาอยู่ในกลุ่มคุณมักจะนั่งเงียบๆ คอยสังเกตการณ์อยู่ห่างๆ ทำให้คุณมองเห็นรายละเอียดเล็กๆ น้อยๆ หรือจุดที่คนอื่นมองข้ามได้เสมอ แม้จะไม่ค่อยกล้าพูดต่อหน้าคนเยอะๆ แต่เวลาต้องช่วยเพื่อนอุดรอยรั่วหรืองานที่ต้องใช้ความละเอียด คุณคือคนที่พึ่งพาได้มากที่สุด"
+            }
+        };
+
+        // ==========================================
+        // 2. ฐานข้อมูลคำถาม (ตัวอย่าง 5 ข้อ)
+        // สามารถปรับแก้คำถาม และกำหนดได้ว่าตัวเลือกไหนบวกแต้มให้สัตว์ตัวใดบ้าง
+        // ==========================================
+        const questions = [
+            {
+                question: "วันหยุดสุดสัปดาห์ที่ไม่มีแพลนอะไรเลย คุณอยากทำอะไรมากที่สุด?",
+                options: [
+                    { text: "ออกไปหาคาเฟ่เปิดใหม่ หรือลองทำกิจกรรมที่ไม่เคยทำมาก่อน", points: ["hamster"] },
+                    { text: "ทักแชทชวนเพื่อนในกลุ่มออกมาหาอะไรกิน เมาท์มอยให้หายคิดถึง", points: ["dolphin"] },
+                    { text: "นอนพักผ่อนเงียบๆ ดูหนัง ฟังเพลงในพื้นที่ส่วนตัว ไม่ต้องวุ่นวายกับใคร", points: ["cat", "rabbit"] },
+                    { text: "วางแผนเคลียร์งานหรือจัดตารางชีวิตสำหรับอาทิตย์หน้าให้เรียบร้อย", points: ["red_panda"] }
+                ]
+            },
+            {
+                question: "เวลาทำงานกลุ่มในห้องเรียน บทบาทประจำของคุณคืออะไร?",
+                options: [
+                    { text: "เป็นหัวหน้ากลุ่ม แบ่งหน้าที่ ตัดสินใจ และคอยคุมภาพรวมให้งานเสร็จ", points: ["red_panda"] },
+                    { text: "คอยเช็คความเรียบร้อย ตรวจคำผิด และเก็บรายละเอียดเล็กๆ ที่เพื่อนลืม", points: ["rabbit"] },
+                    { text: "เสนอไอเดียแปลกใหม่ ฉีกกรอบ ไม่ซ้ำใคร", points: ["hamster"] },
+                    { text: "คอยไกล่เกลี่ยเวลาเพื่อนเห็นไม่ตรงกัน และให้กำลังใจทุกคนในทีม", points: ["sheep", "dolphin"] }
+                ]
+            },
+            {
+                question: "ถ้าเพื่อนสนิททักมาร้องไห้เพราะอกหักหรือเครียดเรื่องเรียน คุณจะทำยังไง?",
+                options: [
+                    { text: "รีบรับฟังอย่างตั้งใจ ปลอบโยน และอยู่เป็นเพื่อนจนกว่าเพื่อนจะสบายใจขึ้น", points: ["sheep"] },
+                    { text: "ชวนคุยเรื่องตลกๆ หรือพาออกไปหาของอร่อยกินเพื่อเปลี่ยนบรรยากาศ", points: ["dolphin", "hamster"] },
+                    { text: "ช่วยวิเคราะห์ปัญหาและแนะนำทางออกที่ชัดเจนว่าควรจัดการยังไงต่อ", points: ["red_panda"] },
+                    { text: "อาจจะพูดปลอบไม่เก่ง แต่คอยสังเกตอาการและซื้อขนมหรือของที่เพื่อนชอบไปให้เงียบๆ", points: ["rabbit", "cat"] }
+                ]
+            },
+            {
+                question: "เวลาต้องเข้าไปอยู่ในกลุ่มคนที่ไม่รู้จักมาก่อน คุณมักจะทำตัวแบบไหน?",
+                options: [
+                    { text: "เดินเข้าไปทักทาย ชวนคุยก่อน เพื่อให้บรรยากาศไม่อึดอัด", points: ["dolphin"] },
+                    { text: "นั่งเงียบๆ สังเกตท่าทีของคนรอบข้างไปก่อน ยังไม่รีบพูดอะไร", points: ["rabbit", "cat"] },
+                    { text: "ตื่นเต้นที่จะได้รู้จักคนใหม่ๆ ลองชวนคุยเรื่องสนุกๆ ดู", points: ["hamster"] },
+                    { text: "ยิ้มแย้มเป็นมิตร คอยรับฟังเวลาคนอื่นพูด", points: ["sheep"] }
+                ]
+            },
+            {
+                question: "ประโยคไหนที่อธิบายความเป็นตัวคุณได้ดีที่สุด?",
+                options: [
+                    { text: "ถึงจะดูนิ่งๆ แต่ถ้าไม่ชอบอะไร ก็ไม่มีใครมาบังคับฉันได้หรอก", points: ["cat"] },
+                    { text: "ชีวิตมันสั้น มีอะไรใหม่ๆ ให้ลองอีกเยอะ!", points: ["hamster"] },
+                    { text: "แค่เห็นคนรอบข้างมีความสุขและสบายใจ ฉันก็โอเคแล้ว", points: ["sheep"] },
+                    { text: "ถ้าไม่มีใครกล้าตัดสินใจ เดี๋ยวฉันจัดการเอง", points: ["red_panda"] }
+                ]
+            }
+        ];
+
+        // ==========================================
+        // 3. ระบบจัดการ State และคำนวณคะแนน
+        // ==========================================
+        let currentQuestionIndex = 0;
+        let userAnswers = []; // เก็บ index ของตัวเลือกที่ผู้ใช้กดในแต่ละข้อ
+
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const progressText = document.getElementById('progress-text');
+        const prevBtn = document.getElementById('prev-btn');
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const currentQ = questions[currentQuestionIndex];
+            progressText.innerText = `คำถามที่ ${currentQuestionIndex + 1} / ${questions.length}`;
+            questionText.innerText = currentQ.question;
+            optionsContainer.innerHTML = '';
+
+            // สร้างปุ่มตัวเลือก
+            currentQ.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = option.text;
+                
+                // ไฮไลต์ปุ่มถ้าเคยเลือกข้อนี้ไว้แล้ว (กรณีกดย้อนกลับ)
+                if (userAnswers[currentQuestionIndex] === index) {
+                    btn.style.fontWeight = 'bold';
+                    btn.style.border = '2px solid #000';
+                }
+
+                btn.onclick = () => selectOption(index);
+                optionsContainer.appendChild(btn);
+            });
+
+            // ซ่อนปุ่มย้อนกลับถ้าอยู่ข้อแรก
+            prevBtn.style.visibility = currentQuestionIndex === 0 ? 'hidden' : 'visible';
+        }
+
+        function selectOption(optionIndex) {
+            userAnswers[currentQuestionIndex] = optionIndex;
+
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                calculateResult();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function calculateResult() {
+            // ตั้งต้นคะแนนทุกตัวเป็น 0
+            const scores = {
+                hamster: 0,
+                dolphin: 0,
+                sheep: 0,
+                cat: 0,
+                red_panda: 0,
+                rabbit: 0
+            };
+
+            // วนลูปนับคะแนนจากคำตอบทั้งหมด
+            userAnswers.forEach((ansIndex, qIndex) => {
+                const selectedOption = questions[qIndex].options[ansIndex];
+                selectedOption.points.forEach(animalKey => {
+                    scores[animalKey] += 1;
+                });
+            });
+
+            // หาสัตว์ที่ได้คะแนนสูงสุด
+            let topAnimal = 'hamster';
+            let maxScore = -1;
+
+            for (const [animalKey, score] of Object.entries(scores)) {
+                if (score > maxScore) {
+                    maxScore = score;
+                    topAnimal = animalKey;
+                }
+            }
+
+            // แสดงผลลัพธ์
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+
+            document.getElementById('result-animal').innerText = animalProfiles[topAnimal].name;
+            document.getElementById('result-desc').innerText = animalProfiles[topAnimal].desc;
+
+            // แสดงคะแนนรวมทั้งหมดเผื่อเช็คการทำงานของระบบ
+            let breakdownHTML = '<strong>คะแนนดิบ (สำหรับเช็คระบบ):</strong><br>';
+            for (const [key, val] of Object.entries(scores)) {
+                breakdownHTML += `${animalProfiles[key].name}: ${val} คะแนน | `;
+            }
+            document.getElementById('score-breakdown').innerHTML = breakdownHTML;
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+    </script>
+</body>
+</html>
