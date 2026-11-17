@@ -238,50 +238,57 @@ h1, h2, h3, p, span, button, div {
    Responsive เฉพาะหน้าจอมือถือ (Mobile View)
    ========================================== */
 @media screen and (max-width: 768px) {
-    /* ปลดล็อกหน้าจอให้เลื่อนขึ้นลงได้อิสระ */
+    /* 1. จัดกึ่งกลางหน้าจอแนวตั้งและแนวนอนแบบยืดหยุ่น */
     body {
         height: auto !important;
         min-height: 100dvh;
         overflow-y: auto !important; 
-        display: block !important; /* ยกเลิก flex ตรง body บนมือถือ เพื่อให้หน้าเว็บยาวต่อเนื่อง */
-        padding: 20px 10px;
+        display: flex !important;
+        flex-direction: column;
+        justify-content: flex-start; /* ให้เริ่มเรียงจากด้านบนลงล่าง */
+        align-items: center;
+        padding: 15px 10px;
+        background-color: #cccccc; /* สีพื้นหลังกันขอบดำ */
     }
 
+    /* 2. จัดการกล่อง .box บนมือถือ */
     .box {
-        width: 92vw;
-        max-width: 400px;
+        width: 94vw;
+        max-width: 420px;
         height: auto !important;
-        min-height: 650px; /* กำหนดความสูงเริ่มต้นให้รับกับสัดส่วนรูปมือถือ */
+        min-height: auto !important; /* ยกเลิกความสูงบังคับ เพื่อให้กล่องหด/ขยายพอดีกับเนื้อหาเป๊ะๆ */
         aspect-ratio: auto; 
         
-        /* ใช้รูป mobile-box.png เป็นพื้นหลังแบบยืดหยุ่นตามแนวตั้ง */
+        /* ใช้รูป mobile-box.png แบบพอดีตัว ไม่ให้เกิดช่องว่างซ้อนกัน */
         background-image: url('mobile-box.png') !important; 
-        background-size: 100% auto !important; /* กว้างเต็มจอ แต่ปล่อยให้สูงตามธรรมชาติของรูป */
-        background-repeat: repeat-y !important; /* ให้รูปต่อกันได้ถ้าเนื้อหายาวมากๆ */
-        background-position: top center;
+        background-size: 100% 100% !important; /* ดึงรูปให้คลุมเนื้อหาในหน้านั้นๆ พอดีโดยไม่มีช่องว่างเหลือ */
+        background-repeat: no-repeat !important;
+        background-position: center top;
         
-        /* ดึงเนื้อหาด้านบนให้ชิดขอบ และเว้นที่ด้านล่างไว้เผื่อปุ่ม */
-        padding: 40px 30px 50px 30px !important; 
+        /* ปรับระยะขอบด้านใน (บน ซ้าย/ขวา ล่าง) ให้สวยงามพอดีเนื้อหา */
+        padding: 35px 25px 40px 25px !important; 
         
-        margin: 0 auto;
+        margin: 10px auto;
         overflow-y: visible !important;
+        box-sizing: border-box;
     }
 
-    /* ปรับขนาดตัวอักษรให้พอดีจอมือถือ ไม่ให้ล้นกรอบ */
+    /* 3. ปรับขนาดตัวอักษรให้พอดีกับมือถือ */
     #typing-title, .box h1 {
-        font-size: clamp(1.2rem, 5vw, 1.6rem) !important;
+        font-size: clamp(1.1rem, 4.8vw, 1.5rem) !important;
+        margin-bottom: 10px;
     }
 
     .box h2 {
-        font-size: clamp(1rem, 4.2vw, 1.3rem) !important;
+        font-size: clamp(0.95rem, 4.2vw, 1.2rem) !important;
     }
 
     .box p, .box span, .option-btn {
-        font-size: clamp(0.9rem, 3.8vw, 1.05rem) !important;
+        font-size: clamp(0.85rem, 3.6vw, 0.98rem) !important;
     }
 
     .custom-btn {
-        padding: 12px 16px;
-        margin: 8px 0;
+        padding: 10px 14px;
+        margin: 6px 0;
     }
 }
