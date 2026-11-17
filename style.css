@@ -1,4 +1,6 @@
-/* 1. ตั้งค่าหน้าจอหลักและบังคับฟอนต์ Kanit ทั้งหน้าเว็บ */
+/* ==========================================
+   1. ตั้งค่าหน้าจอหลักและบังคับฟอนต์ Kanit ทั้งหน้าเว็บ
+   ========================================== */
 body {
     background-image: url('background.png'); 
     background-size: cover; 
@@ -18,10 +20,13 @@ body {
     font-family: 'Kanit', sans-serif;
 }
 
-/* 2. กล่องหลัก (ล็อกสัดส่วนรูป box.png)
+/* ==========================================
+   2. กล่องหลัก (ล็อกสัดส่วนและขนาดคงที่ทุกหน้า)
+   ========================================== */
 .box {
     aspect-ratio: 494 / 650;      
-    height: 72vh;                 
+    height: 70vh;                 
+    width: auto;                  
     max-width: 90vw;              
 
     background-image: url('box.png'); 
@@ -29,104 +34,43 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     
-    padding: 45px;
+    padding: 60px 45px 45px 45px; 
     box-sizing: border-box;
+    
     overflow-y: auto;             
-
+    flex-shrink: 0;               
     font-family: 'Kanit', sans-serif;
 }
 
-/* 3. บังคับหัวข้อ ตัวอักษร และปุ่มทุกอันให้ใช้ฟอนต์ Kanit ชัวร์ๆ
+/* ==========================================
+   3. จัดการขนาดตัวอักษรและหัวข้อ
+   ========================================== */
 h1, h2, h3, p, span, button, div {
     font-family: 'Kanit', sans-serif;
 }
 
-/* คลาสสำหรับเรียกใช้ฟอนต์แบบเอียงและหนาปานกลาง
-.kanit-medium-italic {
-    font-family: 'Kanit', sans-serif;
-    font-weight: 500;
-    font-style: italic;
-}
-
-.hidden {
-    display: none !important;
-}
-
-/* 4. ตกแต่งปุ่มตัวเลือก
-.option-btn {
-    display: block;
-    width: 100%;
-    padding: 12px 16px;
-    margin: 10px 0;
-    text-align: left;
-    cursor: pointer;
-    font-size: 1rem;
-    font-family: 'Kanit', sans-serif;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    transition: 0.2s;
-}
-
-.option-btn:hover {
-    background-color: #f2f2f2;
-}
-
-.nav-buttons {
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.debug-scores {
-    background: #f4f4f4;
-    padding: 12px;
-    margin: 15px 0;
-    font-size: 0.9rem;
-    border-radius: 4px;
-    font-family: 'Kanit', sans-serif;
-}/*
-
-/* 1. กำหนดฟอนต์ให้ปรับขนาดตามสัดส่วนหน้าจอ/กล่องโดยอัตโนมัติ */
-.box {
-/* 1. ล็อกสัดส่วนและขนาดความสูง-กว้างให้คงที่ทุกหน้า */
-    aspect-ratio: 494 / 650;      
-    height: 70vh;                 /* ล็อกความสูงไว้ที่ 70% ของจอ (ปรับเพิ่ม-ลดได้ตามต้องการ) */
-    width: auto;                  /* ให้กว้างตามสัดส่วนของความสูงอัตโนมัติ */
-    max-width: 90vw;              /* กันล้นแนวนอนในมือถือ */
-
-    background-image: url('box.png'); 
-    background-size: contain;     
-    background-position: center;
-    background-repeat: no-repeat;
-    
-    padding: 60px 45px 45px 45px; /* บน ขวา ล่าง ซ้าย (ปรับเลข 60px เพิ่มลดได้ตามชอบ) */
-    
-    box-sizing: border-box;
-    
-    /* 2. สำคัญ: ถ้าเนื้อหาข้างในหน้าไหนยาวเกินกล่อง ให้มันเลื่อนดูเฉพาะข้างในแทนที่กล่องจะขยาย */
-    overflow-y: auto;             
-    
-    /* 3. ป้องกันไม่ให้ Flexbox บีบหรือขยายกล่อง */
-    flex-shrink: 0;               
-
-}
-
-/* 2. ฟิกขนาดตัวอักษรให้ย่อ-ขยายตามความสูงของจอ (vh) หรือใช้ clamp() */
 .box h1 {
-    font-size: clamp(1.2rem, 3vh, 1.8rem); /* ขนาดหัวข้อใหญ่ จะย่อ/ขยายตามจอพอดี */
+    font-size: clamp(1.2rem, 3vh, 1.8rem);
     margin-top: 0;
 }
 
 .box h2 {
-    font-size: clamp(1rem, 2.5vh, 1.4rem); /* ขนาดหัวข้อคำถาม */
+    font-size: clamp(1rem, 2.5vh, 1.4rem);
 }
 
 .box p, .box span {
-    font-size: clamp(0.85rem, 1.8vh, 1.1rem); /* ขนาดข้อความทั่วไป */
+    font-size: clamp(0.85rem, 1.8vh, 1.1rem);
 }
 
-/* 3. ปรับปุ่มตัวเลือกให้ขนาดตัวหนังสือและปุ่มสัมพันธ์กับกล่อง */
+/* หัวข้อหน้าแรก (กำหนดขนาดให้ใหญ่ชัดเจนและไม่เพี้ยน) */
+#typing-title {
+    font-size: clamp(1.5rem, 3.5vh, 2.2rem); 
+    margin-bottom: 15px;
+}
+
+/* ==========================================
+   4. ตกแต่งปุ่มตัวเลือกและส่วนอื่นๆ
+   ========================================== */
 .option-btn {
     display: block;
     width: 100%;
@@ -134,10 +78,7 @@ h1, h2, h3, p, span, button, div {
     margin: 8px 0;
     text-align: left;
     cursor: pointer;
-    
-    /* ใช้ clamp() เพื่อให้ฟอนต์ในปุ่มย่อ-ขยายตามจอได้ ไม่ล้นกล่อง */
     font-size: clamp(0.8rem, 1.6vh, 1rem); 
-    
     font-family: 'Kanit', sans-serif;
     background-color: #ffffff;
     border: 1px solid #ddd;
@@ -166,4 +107,56 @@ h1, h2, h3, p, span, button, div {
     font-size: clamp(0.7rem, 1.4vh, 0.9rem);
     border-radius: 6px;
     font-family: 'Kanit', sans-serif;
+}
+
+.kanit-medium-italic {
+    font-family: 'Kanit', sans-serif;
+    font-weight: 500;
+    font-style: italic;
+}
+
+/* ==========================================
+   5. เอฟเฟกต์หน้าแรก (พิมพ์ดีดและจัดกึ่งกลาง)
+   ========================================== */
+#start-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* ปรับแต่งแอนิเมชันตัวอักษรให้สมูทและนุ่มนวลขึ้น */
+@keyframes smoothCharReveal {
+    0% {
+        opacity: 0;
+        transform: translateY(5px); /* ขยับขึ้นมานิดเดียวเพื่อให้ดูเนียน */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.char-smooth {
+    display: inline-block;
+    white-space: pre; 
+    font-size: clamp(1.2rem, 3vh, 1.8rem) !important; 
+    opacity: 0;
+    
+    /* เพิ่มเวลาเป็น 0.8s และใช้ cubic-bezier แบบนุ่มพิเศษ (Deceleration curve) */
+    animation: smoothCharReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.fade-item {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1), 
+                transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+}
+
+.fade-item.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
 }
