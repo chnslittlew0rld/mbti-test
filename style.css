@@ -1,3 +1,23 @@
+/* 1. ตั้งค่าหน้าจอหลักและบังคับฟอนต์ Kanit ทั้งหน้าเว็บ */
+body {
+    background-image: url('background.png'); 
+    background-size: cover; 
+    background-position: center; 
+    background-attachment: fixed; 
+    background-color: #cccccc; 
+
+    margin: 0;
+    padding: 0;
+    height: 100vh;                
+    overflow: hidden;             
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;          
+
+    font-family: 'Kanit', sans-serif;
+}
+
 /* 1. กำหนดฟอนต์ให้ปรับขนาดตามสัดส่วนหน้าจอ/กล่องโดยอัตโนมัติ */
 .box {
     aspect-ratio: 494 / 650;      
