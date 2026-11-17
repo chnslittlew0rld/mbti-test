@@ -251,22 +251,43 @@ h1, h2, h3, p, span, button, div {
     }
 
     .box {
-        width: 90vw;               /* ความกว้างเต็มตาบนมือถือ */
-        max-width: 420px;          /* จำกัดไม่ให้กว้างเกินไปในจอมือถือใหญ่ๆ */
+        width: 92vw;
+        max-width: 420px;
+        
+        /* 📌 ล็อกสัดส่วนตามรูปจริง 1080 / 1920 เป๊ะๆ เพื่อไม่ให้รูปเบี้ยวหรือโดนตัด */
+        aspect-ratio: 1080 / 1920 !important; 
         height: auto !important;
-        aspect-ratio: auto;        /* ปลดล็อกสัดส่วนเดิมของคอม */
+        min-height: auto !important;
         
-        /* 📌 ใช้รูป mobile-box.png โดยรักษาอัตราส่วนจริง ไม่ให้รูปเพี้ยน */
+        /* ใช้รูป mobile-box.png และจัดวางแบบเต็มกรอบพอดีสัดส่วน */
         background-image: url('mobile-box.png') !important; 
-        background-size: 100% auto !important; /* กว้างพอดีจอ แต่ปล่อยสูงตามสัดส่วนจริงของรูปภาพ */
+        background-size: 100% 100% !important; 
         background-repeat: no-repeat !important;
-        background-position: top center;
+        background-position: center;
         
-        /* เว้นขอบด้านในให้ข้อความไม่ชนขอบรูป */
-        padding: 50px 30px 60px 30px !important; 
+        /* 📌 ปรับ Padding ด้านใน (บน, ขวา, ล่าง, ซ้าย) ให้ข้อความและปุ่มตกลงในพื้นที่กรอบรูปพอดี */
+        padding: 60px 40px 60px 40px !important; 
         
         margin: 10px auto;
         overflow-y: visible !important;
         box-sizing: border-box;
+    }
+
+    /* ปรับขนาดตัวอักษรให้รับกับกรอบมือถือ */
+    #typing-title, .box h1 {
+        font-size: clamp(1.1rem, 4.5vw, 1.5rem) !important;
+    }
+
+    .box h2 {
+        font-size: clamp(0.95rem, 4vw, 1.2rem) !important;
+    }
+
+    .box p, .box span, .option-btn {
+        font-size: clamp(0.85rem, 3.5vw, 0.98rem) !important;
+    }
+
+    .custom-btn {
+        padding: 10px 14px;
+        margin: 6px 0;
     }
 }
