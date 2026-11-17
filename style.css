@@ -100,7 +100,8 @@ h1, h2, h3, p, span, button, div {
     background-position: center;
     background-repeat: no-repeat;
     
-    padding: 45px;
+    padding: 60px 45px 45px 45px; /* บน ขวา ล่าง ซ้าย (ปรับเลข 60px เพิ่มลดได้ตามชอบ) */
+    
     box-sizing: border-box;
     
     /* 2. สำคัญ: ถ้าเนื้อหาข้างในหน้าไหนยาวเกินกล่อง ให้มันเลื่อนดูเฉพาะข้างในแทนที่กล่องจะขยาย */
@@ -108,7 +109,7 @@ h1, h2, h3, p, span, button, div {
     
     /* 3. ป้องกันไม่ให้ Flexbox บีบหรือขยายกล่อง */
     flex-shrink: 0;               
-    flex-grow: 0;
+
 }
 
 /* 2. ฟิกขนาดตัวอักษรให้ย่อ-ขยายตามความสูงของจอ (vh) หรือใช้ clamp() */
