@@ -235,40 +235,50 @@ h1, h2, h3, p, span, button, div {
 }
 
 /* ==========================================
-   Responsive สำหรับหน้าจอมือถือ (Mobile View)
+   Responsive เฉพาะหน้าจอมือถือ (Mobile View)
    ========================================== */
 @media screen and (max-width: 768px) {
     body {
-        /* ป้องกันจอขยับหรือมี Scrollbar เกินความจำเป็นบนมือถือ */
         height: 100dvh; 
-        padding: 10px;
+        padding: 5px;
+        /* เปิดให้หน้าเว็บในมือถือเลื่อนขึ้น-ลงได้ตามความยาวของรูปและเนื้อหา */
+        overflow-y: auto !important; 
     }
 
     .box {
-        /* ยืดหยุ่นความสูงตามหน้าจอมือถือ ไม่ล็อกตายตัวเกินไป */
-        width: 92vw;
+        /* ใช้ความกว้างเกือบเต็มจอ และปลดล็อกความสูงให้ยืดหยุ่นตามเนื้อหา */
+        width: 95vw;
         height: auto;
-        min-height: 520px;
-        aspect-ratio: auto; /* ปลดล็อกสัดส่วนเดิมบนจอเล็ก เพื่อให้กล่องขยายตามเนื้อหาแนวตั้งได้ */
+        min-height: auto;
+        aspect-ratio: auto; 
         
-        /* ปรับระยะขอบด้านในให้กะทัดรัดขึ้นบนมือถือ */
-        padding: 45px 25px 25px 25px; 
+        /* 📌 เปลี่ยนรูปพื้นหลังเฉพาะในมือถือเป็น mobile-box.png */
+        background-image: url('mobile-box.png') !important; 
+        background-size: 100% 100% !important; /* ยืดรูปให้คลุมพื้นที่แนวตั้งพอดี */
+        background-repeat: no-repeat;
+        
+        /* 📌 ปรับ padding ด้านบนให้แคบลงเหลือประมาณ 25px เพื่อให้เนื้อหาดันขึ้นไปเกือบชิดขอบบน */
+        padding: 25px 25px 35px 25px !important; 
+        
+        /* เปิดให้กล่องยืดขยายและเลื่อนดูข้างในได้ */
+        overflow-y: visible !important;
+        margin: 20px auto;
     }
 
-    /* ปรับขนาดตัวอักษรหัวข้อให้พอดีกับจอมือถือ ไม่ให้ขึ้นบรรทัดใหม่น่าเกลียด */
+    /* ปรับขนาดตัวอักษรหัวข้อให้พอดีกับจอมือถือ */
     #typing-title, .box h1 {
-        font-size: clamp(1.2rem, 5vw, 1.6rem) !important;
+        font-size: clamp(1.1rem, 4.5vw, 1.5rem) !important;
     }
 
     .box h2 {
-        font-size: clamp(1rem, 4.2vw, 1.3rem) !important;
+        font-size: clamp(0.95rem, 4vw, 1.2rem) !important;
     }
 
     .box p, .box span, .option-btn {
-        font-size: clamp(0.85rem, 3.8vw, 1rem) !important;
+        font-size: clamp(0.85rem, 3.5vw, 0.95rem) !important;
     }
 
-    /* ทำให้ปุ่มตัวเลือกกดง่ายขึ้นบนมือถือ */
+    /* ทำให้ปุ่มตัวเลือกและปุ่มต่างๆ สวยงามและกดง่ายขึ้นบนมือถือ */
     .custom-btn {
         padding: 10px 14px;
         margin: 6px 0;
