@@ -233,3 +233,44 @@ h1, h2, h3, p, span, button, div {
     padding: 10px 24px !important;    /* ปรับระยะขอบซ้าย-ขวาให้สวยงาม */
     margin: 5px auto !important;     /* จัดให้อยู่กึ่งกลาง */
 }
+
+/* ==========================================
+   Responsive สำหรับหน้าจอมือถือ (Mobile View)
+   ========================================== */
+@media screen and (max-width: 768px) {
+    body {
+        /* ป้องกันจอขยับหรือมี Scrollbar เกินความจำเป็นบนมือถือ */
+        height: 100dvh; 
+        padding: 10px;
+    }
+
+    .box {
+        /* ยืดหยุ่นความสูงตามหน้าจอมือถือ ไม่ล็อกตายตัวเกินไป */
+        width: 92vw;
+        height: auto;
+        min-height: 520px;
+        aspect-ratio: auto; /* ปลดล็อกสัดส่วนเดิมบนจอเล็ก เพื่อให้กล่องขยายตามเนื้อหาแนวตั้งได้ */
+        
+        /* ปรับระยะขอบด้านในให้กะทัดรัดขึ้นบนมือถือ */
+        padding: 45px 25px 25px 25px; 
+    }
+
+    /* ปรับขนาดตัวอักษรหัวข้อให้พอดีกับจอมือถือ ไม่ให้ขึ้นบรรทัดใหม่น่าเกลียด */
+    #typing-title, .box h1 {
+        font-size: clamp(1.2rem, 5vw, 1.6rem) !important;
+    }
+
+    .box h2 {
+        font-size: clamp(1rem, 4.2vw, 1.3rem) !important;
+    }
+
+    .box p, .box span, .option-btn {
+        font-size: clamp(0.85rem, 3.8vw, 1rem) !important;
+    }
+
+    /* ทำให้ปุ่มตัวเลือกกดง่ายขึ้นบนมือถือ */
+    .custom-btn {
+        padding: 10px 14px;
+        margin: 6px 0;
+    }
+}
